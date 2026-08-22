@@ -1,0 +1,34 @@
+# AgentATS — never commit these
+.env
+.env.*
+*.env
+*.key
+*.pem
+*.p12
+*.pfx
+secrets.*
+service-account*.json
+*service_role*
+*credentials*.json
+client_secret*.json
+apply_secret.txt
+
+# dependencies / build junk
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+dist/
+build/
+
+# OS / editor noise
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# local scratch
+*.log
+tmp/
+*.tmp
