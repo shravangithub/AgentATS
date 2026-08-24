@@ -2,6 +2,8 @@
 
 **An open-source, AI-native ATS that runs entirely inside your own Google account — free forever.**
 
+![Why AgentATS — free vs. thousands a year, you own your data, no per-seat pricing, bring your own AI key, explainable and bias-aware, open source](agentats-why.gif)
+
 No servers. No database bills. No per-seat pricing. You paste six files into a free Google Apps Script project, run one function, and you have a working applicant tracking system: a hiring web app for your team, a public careers page for candidates, AI resume parsing and scoring, interview scheduling, debriefs, and analytics — all stored in a Google Sheet and Drive folder that *you* own.
 
 ---
@@ -98,6 +100,10 @@ Honest benchmarking against the tools this replaces for small and mid-size teams
 **In one line:** the most capable ATS you can run for free inside your own Google account, with real AI — built for startups and lean TA teams, not regulated enterprises. You bring a Gemini key and accept a few seconds of AI latency and Google's platform limits in exchange for owning your data and paying nothing for software.
 
 If you're a 2,000-person company with a compliance team, buy an enterprise ATS. If you're a founder, an agency, or a TA team of one to fifteen who wants full control and a $0 software bill — this was built for you. (Scale, latency, compliance, and integrations are exactly what a database-backed successor addresses — see Optional modules.)
+
+## See the AI work
+
+![AgentATS in action — AI reads a résumé into a structured profile, scores and stack-ranks candidates, and answers a plain-English question](agentats-ai-magic.gif)
 
 ## 2-minute setup
 
