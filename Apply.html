@@ -1,0 +1,37 @@
+<!DOCTYPE html><html><head><base target="_top">
+<style>
+ body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:#f6f5f1;margin:0;padding:24px;color:#1a1a1a}
+ .card{max-width:480px;margin:0 auto;background:#fff;border:1px solid #e2ddd0;border-radius:14px;padding:24px}
+ h2{margin:0 0 4px}.sub{color:#777;font-size:13px;margin-bottom:18px}
+ label{display:block;font-size:12px;font-weight:600;color:#444;margin:10px 0 3px}
+ input,select{width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;font-size:14px;box-sizing:border-box}
+ button{margin-top:16px;width:100%;background:#2f6f4f;color:#fff;border:0;border-radius:9px;padding:12px;font-size:15px;font-weight:600;cursor:pointer}
+ #msg{margin-top:14px;font-size:14px;color:#555}
+ .hp{position:absolute;left:-9999px}
+</style></head><body>
+<div class="card" id="form">
+ <h2>Join our team</h2><div class="sub">Submit your application — we'll be in touch.</div>
+ <label>Full name *</label><input id="name">
+ <label>Email *</label><input id="email" type="email">
+ <label>Phone</label><input id="phone">
+ <label>Current location</label><input id="location">
+ <label>Position</label><select id="req"><option value="">Select…</option></select>
+ <label>Resume (PDF/Word) *</label><input id="file" type="file" accept=".pdf,.doc,.docx">
+ <input id="website" class="hp" tabindex="-1" autocomplete="off" placeholder="Leave blank">
+ <button onclick="submitApp()">Submit application</button>
+ <div id="msg"></div>
+</div>
+<script>
+ google.script.run.withSuccessHandler(function(l){var s=document.getElementById('req');l.forEach(function(r){var o=document.createElement('option');o.value=r.id;o.textContent=r.label;s.appendChild(o);});}).listOpenReqs();
+ // L-5: HTML-escape anything user-typed before it goes into innerHTML (self-XSS hardening).
+ function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+ function submitApp(){
+   var name=document.getElementById('name').value.trim(),email=document.getElementById('email').value.trim(),f=document.getElementById('file').files[0];
+   if(!name||!email||!f){document.getElementById('msg').textContent='Please add name, email and your resume.';return;}
+   document.getElementById('msg').textContent='Submitting…';
+   var rd=new FileReader();
+   rd.onload=function(){google.script.run.withSuccessHandler(function(res){if(String(res).indexOf('ERR:')===0){document.getElementById('msg').textContent='⚠️ '+String(res).slice(4);return;}document.getElementById('form').innerHTML='<h2>✅ Thank you, '+esc(name)+'!</h2><div class="sub">Your application has been received. Our team will review it and get back to you.</div>';}).withFailureHandler(function(x){document.getElementById('msg').textContent='⚠️ '+x.message;}).submitApplication({name:name,email:email,phone:document.getElementById('phone').value,location:document.getElementById('location').value,reqId:document.getElementById('req').value,website:document.getElementById('website').value,resumeB64:rd.result.split(',')[1],resumeName:f.name,resumeType:f.type});};
+   rd.readAsDataURL(f);
+ }
+</script>
+</body></html>

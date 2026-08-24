@@ -1,0 +1,93 @@
+<!doctype html><html><head><base target="_blank"><meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+ body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:#f6f5f1;color:#1a1a1a;margin:0;padding:22px}
+ .wrap{max-width:720px;margin:0 auto}
+ h1{font-size:20px;margin:0 0 2px}.sub{color:#777;font-size:12.5px;margin-bottom:16px}
+ .panel{background:#fff;border:1px solid #e4e0d6;border-radius:12px;padding:18px;margin-bottom:14px}
+ h2{font-size:15px;margin:0 0 10px}
+ label{display:block;font-size:12px;font-weight:600;color:#444;margin:8px 0 3px}
+ input,select,textarea{width:100%;padding:9px;border:1px solid #ddd;border-radius:8px;font-size:14px;box-sizing:border-box}
+ .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+ button.go{margin-top:12px;background:#2f6f4f;color:#fff;border:0;border-radius:9px;padding:10px 18px;font-size:14px;font-weight:600;cursor:pointer}
+ .res{border:1px solid #e4e0d6;border-radius:10px;padding:12px;margin-top:10px}
+ .res .top{display:flex;justify-content:space-between;align-items:center}
+ .score{background:#2f7d5b;color:#fff;border-radius:20px;padding:2px 9px;font-size:12px;font-weight:700}
+ .meta{font-size:11.5px;color:#888;margin:2px 0 6px}
+ .txt{font-size:12.5px;color:#333;line-height:1.5;white-space:pre-wrap}
+ .addb{margin-top:8px;background:#3a6ea5;color:#fff;border:0;border-radius:8px;padding:6px 12px;font-size:12.5px;font-weight:600;cursor:pointer}
+ .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+ .tab{padding:6px 12px;border:1px solid #d6e2ee;background:#eef3f8;color:#3a6ea5;border-radius:20px;font-size:12.5px;font-weight:600;cursor:pointer}.tab.on{background:#3a6ea5;color:#fff;border-color:#3a6ea5}
+ #q{width:100%;box-sizing:border-box;margin-top:12px;padding:10px;border:1px dashed #cbb;border-radius:8px;font-family:ui-monospace,Menlo,monospace;font-size:12px;background:#faf9f5;min-height:54px}
+ .act{display:flex;gap:8px;margin-top:8px}.act a,.act button{text-decoration:none;border:0;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:600;cursor:pointer}.search{background:#3a6ea5;color:#fff}.copy{background:#eee;color:#333}
+ .hint{font-size:11.5px;color:#888;margin-top:10px;line-height:1.5}
+ .price{font-size:11.5px;color:#555;background:#f1efe8;border-radius:8px;padding:8px 10px;margin-top:8px}
+</style></head><body><div class="wrap">
+ <h1>Sourcing Engine</h1>
+ <div class="sub">Live sourcing from free, bot-safe sources + X-ray query builder. No scraping of blocked sites.</div>
+
+ <div class="panel">
+  <h2>🟢 Live sourcing — Hacker News "Who wants to be hired"</h2>
+  <div class="row">
+   <div><label>Score against requisition</label><select id="req"><option value="">— none (general fit) —</option></select></div>
+   <div><label>Filter by skills/keywords</label><input id="kw" placeholder="e.g. Go, backend, remote"></div>
+  </div>
+  <button class="go" onclick="runHN()">Source from Hacker News</button>
+  <div id="hnres"></div>
+  <div class="hint">Candidates here <b>posted themselves</b> looking for work (opt-in, public, official free API — zero bot risk). Each is scored vs your requisition's JD.</div>
+ </div>
+
+ <div class="panel">
+  <h2>🔎 X-ray query builder — LinkedIn, X/Twitter, GitHub, resumes</h2>
+  <div class="tabs" id="tabs"></div>
+  <div class="row"><div><label>Title / keywords</label><input id="title" placeholder="Backend Engineer"></div><div><label>Location</label><input id="loc" placeholder="Bangalore"></div></div>
+  <label>Skills (comma separated)</label><input id="skills" placeholder="Go, Kafka">
+  <div class="row"><div><label>Current company (optional)</label><input id="co"></div><div><label>Exclude words (optional)</label><input id="ex"></div></div>
+  <button class="go" onclick="build()">Build search</button>
+  <textarea id="q" readonly></textarea>
+  <div class="act"><a class="search" id="sBtn" href="#">Search on Google ↗</a><button class="copy" onclick="copyQ()">Copy</button></div>
+  <div class="hint" id="xhint"></div>
+ </div>
+
+ <div class="panel">
+  <h2>📄 Public resume scraping (SerpAPI) — optional add-on</h2>
+  <div class="price"><b>SerpAPI pricing:</b> 250 searches/month <b>free</b>, then $25 / 1,000 · $75 / 5,000 · $150 / 15,000 · $275 / 30,000. Each search returns a page of public-resume results. <b>Disabled by default</b> — enable per client after country/legal sign-off.</div>
+  <div class="hint">When enabled, this pulls public PDF resumes via SerpAPI (bot-safe). LinkedIn stays X-ray-only. For high volume in India, pair with Naukri Resdex (official paid DB).</div>
+ </div>
+</div>
+<script>
+/* C-1: adding a sourced candidate is a write, so it must carry the recruiter's ?u= token.
+   Open this page as .../exec?page=source&u=YOUR_TOKEN (same token as your main app link). */
+var _srcTok='';try{_srcTok=(new URLSearchParams(location.search)).get('u')||'';}catch(e){}
+google.script.run.withSuccessHandler(function(l){var s=document.getElementById('req');(l||[]).forEach(function(r){var o=document.createElement('option');o.value=r.id;o.textContent=r.label;s.appendChild(o);});}).listRequisitions();
+function esc(s){return (s||'').replace(/</g,'&lt;');}
+function runHN(){
+ var btnres=document.getElementById('hnres');btnres.innerHTML='<div class="hint">Searching Hacker News + scoring… (a few seconds)</div>';
+ google.script.run.withSuccessHandler(function(d){
+  if(d.error){btnres.innerHTML='<div class="hint">⚠️ '+d.error+'</div>';return;}
+  if(!d.posts.length){btnres.innerHTML='<div class="hint">No matching posts in '+esc(d.thread)+'. Try fewer keywords.</div>';return;}
+  btnres.innerHTML='<div class="hint">From: '+esc(d.thread)+' — '+d.count+' matches</div>'+d.posts.map(function(p,i){
+   return '<div class="res"><div class="top"><b>'+esc(p.author)+'</b><span class="score">'+(p.score===''?'—':p.score)+'</span></div><div class="meta">'+p.source+' · posted '+p.date+' · <a href="'+p.url+'">view post ↗</a></div><div class="txt">'+esc(p.text)+'</div><button class="addb" onclick="addHN('+i+')">+ Add to pipeline</button></div>';
+  }).join('');
+  window._hn=d.posts;
+ }).withFailureHandler(function(x){btnres.innerHTML='<div class="hint">⚠️ '+x.message+'</div>';}).sourceHN(document.getElementById('req').value,document.getElementById('kw').value);
+}
+function addHN(i){var p=window._hn[i];google.script.run.withSuccessHandler(function(r){alert(r);}).addSourcedCandidate({name:p.author,source:'Hacker News',url:p.url,score:p.score,notes:p.text,reqId:document.getElementById('req').value}, '#tok:'+_srcTok);}
+var PL=[{k:'linkedin',l:'LinkedIn'},{k:'twitter',l:'X/Twitter'},{k:'github',l:'GitHub'},{k:'wellfound',l:'Wellfound'},{k:'behance',l:'Behance'},{k:'dribbble',l:'Dribbble'},{k:'readcv',l:'read.cv / PM'},{k:'resume',l:'Resumes'},{k:'stack',l:'Stack Overflow'}];var cur='linkedin';
+function tabs(){document.getElementById('tabs').innerHTML=PL.map(function(p){return '<span class="tab'+(p.k===cur?' on':'')+'" onclick="pick(\''+p.k+'\')">'+p.l+'</span>';}).join('');}
+function pick(k){cur=k;tabs();build();}
+function build(){var t=document.getElementById('title').value.trim(),loc=document.getElementById('loc').value.trim(),co=document.getElementById('co').value.trim();var sk=document.getElementById('skills').value.split(',').map(function(s){return s.trim();}).filter(Boolean);var ex=document.getElementById('ex').value.split(',').map(function(s){return s.trim();}).filter(Boolean);var sOR=sk.length?'('+sk.map(function(s){return '"'+s+'"';}).join(' OR ')+')':'';var parts=[],hint='';
+ if(cur==='linkedin'){parts=['site:linkedin.com/in/'];if(t)parts.push('"'+t+'"');if(sOR)parts.push(sOR);if(loc)parts.push('"'+loc+'"');if(co)parts.push('"'+co+'"');parts.push('-intitle:"profiles"');hint='Opens public LinkedIn profiles. Connect on LinkedIn itself (no scraping).';}
+ else if(cur==='twitter'){parts=['site:twitter.com'];if(t)parts.push('"'+t+'"');if(sOR)parts.push(sOR);if(loc)parts.push('"'+loc+'"');hint='Finds matching X/Twitter bios.';}
+ else if(cur==='github'){parts=['site:github.com',t].filter(Boolean);if(sOR)parts.push(sOR);if(loc)parts.push('"'+loc+'"');hint='Also try github.com/search (native, free API).';}
+ else if(cur==='resume'){parts=['(intitle:resume OR inurl:resume OR intitle:cv)'];if(t)parts.push('"'+t+'"');if(sOR)parts.push(sOR);if(loc)parts.push('"'+loc+'"');parts.push('filetype:pdf','-job','-sample','-template');hint='Public PDF resumes — often include contact details.';}
+ else if(cur==='wellfound'){parts=['site:wellfound.com/u/'];if(t)parts.push('"'+t+'"');if(sOR)parts.push(sOR);if(loc)parts.push('"'+loc+'"');hint='Wellfound (AngelList) public profiles. Many are login-gated; full search needs Wellfound Recruit (paid).';}
+ else if(cur==='behance'){parts=['site:behance.net'];if(t)parts.push('"'+t+'"');if(sOR)parts.push(sOR);if(loc)parts.push('"'+loc+'"');hint='Designers\' public portfolios on Behance. Open a project to find their contact / site.';}
+ else if(cur==='dribbble'){parts=['site:dribbble.com'];if(t)parts.push('"'+t+'"');if(sOR)parts.push(sOR);if(loc)parts.push('"'+loc+'"');hint='Designers on Dribbble. Many list a personal site or email on their profile.';}
+ else if(cur==='readcv'){parts=['(site:read.cv OR site:polywork.com OR site:producthunt.com)'];if(t)parts.push('"'+t+'"');if(sOR)parts.push(sOR);if(loc)parts.push('"'+loc+'"');hint='read.cv / Polywork / Product Hunt — public portfolios for designers & PMs. Also join AI/design Slack communities and source from their intro channels manually (Slack is private — not scrapable).';}
+ else{parts=['site:stackoverflow.com/users'];if(sOR)parts.push(sOR);if(loc)parts.push('"'+loc+'"');hint='Developer profiles on Stack Overflow.';}
+ ex.forEach(function(w){parts.push('-'+(w.indexOf(' ')>-1?'"'+w+'"':w));});
+ var query=parts.filter(Boolean).join(' ');document.getElementById('q').value=query;document.getElementById('sBtn').href='https://www.google.com/search?q='+encodeURIComponent(query);document.getElementById('xhint').textContent=hint;}
+function copyQ(){var t=document.getElementById('q');t.select();document.execCommand('copy');}
+tabs();build();
+</script>
+</body></html>
