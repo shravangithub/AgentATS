@@ -52,7 +52,7 @@ AgentATS uses **Google Gemini** through *your own* API key — bring your own ke
 
 Honest benchmarking against the tools this replaces for small and mid-size teams:
 
-| | AgentATS | Ashby / Greenhouse / Lever / Workday |
+| | AgentATS | Leading paid ATS platforms |
 |---|---|---|
 | Price | Free, forever (plus cents of AI usage on your own key) | Roughly $300–$1,000+/month for small teams; enterprise pricing beyond |
 | Data ownership | 100% in your Google account — the "database" is a Sheet you can open | Vendor cloud; exports on request |
@@ -97,7 +97,7 @@ Honest benchmarking against the tools this replaces for small and mid-size teams
 
 **In one line:** the most capable ATS you can run for free inside your own Google account, with real AI — built for startups and lean TA teams, not regulated enterprises. You bring a Gemini key and accept a few seconds of AI latency and Google's platform limits in exchange for owning your data and paying nothing for software.
 
-If you're a 2,000-person company with a compliance team, buy Greenhouse. If you're a founder, an agency, or a TA team of one to fifteen who wants full control and a $0 software bill — this was built for you. (Scale, latency, compliance, and integrations are exactly what a database-backed successor addresses — see Optional modules.)
+If you're a 2,000-person company with a compliance team, buy an enterprise ATS. If you're a founder, an agency, or a TA team of one to fifteen who wants full control and a $0 software bill — this was built for you. (Scale, latency, compliance, and integrations are exactly what a database-backed successor addresses — see Optional modules.)
 
 ## 2-minute setup
 
