@@ -2,6 +2,8 @@
 
 **An open-source, AI-native ATS that runs entirely inside your own Google account — free forever.**
 
+**[▶ Try the live demo](https://shravangithub.github.io/AgentATS/demo/)** — the real app with fictional sample data, nothing to install · **[Website](https://shravangithub.github.io/AgentATS/)**
+
 ![Why AgentATS — free vs. thousands a year, you own your data, no per-seat pricing, bring your own AI key, explainable and bias-aware, open source](agentats-why.gif)
 
 No servers. No database bills. No per-seat pricing. You paste six files into a free Google Apps Script project, run one function, and you have a working applicant tracking system: a hiring web app for your team, a public careers page for candidates, AI resume parsing and scoring, interview scheduling, debriefs, and analytics — all stored in a Google Sheet and Drive folder that *you* own.
@@ -103,7 +105,22 @@ If you're a 2,000-person company with a compliance team, buy an enterprise ATS. 
 
 ## See the AI work
 
-![AgentATS in action — AI reads a résumé into a structured profile, scores and stack-ranks candidates, and answers a plain-English question](agentats-ai-magic.gif)
+Screenshots from the [live demo](https://shravangithub.github.io/AgentATS/demo/). All names and companies are fictional sample data.
+
+**Pipeline with AI fit scores**
+![Requisition pipeline with AI fit scores per candidate](screenshots/pipeline.png)
+
+**37-category rubric scorecard — every score explained**
+![37-category rubric scorecard with per-category weights](screenshots/rubric-scorecard.png)
+
+**Stack rank — AI fit, must-haves and experience in one ranked list**
+![Stack-ranked shortlist with reasons per candidate](screenshots/stack-rank.png)
+
+**Ask your pipeline in plain English**
+![Plain-English question answered with a ranked list](screenshots/ask-your-pipeline.png)
+
+**Recruiting analytics**
+![Funnel, source effectiveness and rejection analytics](screenshots/analytics.png)
 
 ## 2-minute setup
 
