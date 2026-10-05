@@ -79,6 +79,14 @@ Honest benchmarking against the tools this replaces for small and mid-size teams
 - Best for **small-to-mid pipelines** — hundreds to low-thousands of active candidates. Sheets slow down and hit cell limits well before enterprise volumes (the built-in archiver helps).
 - It's a spreadsheet, not a real database — **no true transactions**; concurrency is guarded with locks, not an RDBMS.
 
+*Why screens take a moment to open*
+- **Each screen fetches fresh data from Google's servers** — usually 1–3 seconds, because every screen reads your tracker Sheet before it can show anything.
+- **The first load after a quiet period is slower** (a few seconds more) while Google starts the app back up — a "cold start".
+- **AI actions add a few seconds** (parsing, scoring, ranking, briefs) because they call Gemini.
+- **Saves run one at a time** so teammates can't overwrite each other, so busy moments can queue briefly.
+- **Revisits feel instant:** screens you've already opened load from a cached copy and refresh in the background. Very large trackers get slower; the built-in archiver keeps active data small and screens fast.
+- This is the trade-off for running free inside your own Google account — no servers, no bill.
+
 *AI (bring your own Gemini key)*
 - **Not truly zero-cost:** the software is free, but you use *your own* Gemini API key and pay pay-as-you-go (cents for small teams, but not $0).
 - **AI actions take a few seconds** (parse a CV, score, draft an email) — assistive, not instant.
