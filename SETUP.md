@@ -23,6 +23,7 @@ For each file below: in the editor's left sidebar click **+** next to *Files*, p
 | `Index.html` | HTML | `Index` |
 | `Apply.html` | HTML | `Apply` |
 | `Source.html` | HTML | `Source` |
+| `Speed.gs` | Script | `Speed` (recommended — faster startup) |
 
 (`Code.gs` already exists in a new project — just replace its contents. `CvForwarder.gs` is **not** pasted here; it goes into a *separate* project later — see below.)
 
@@ -79,6 +80,7 @@ If you have a `careers@yourcompany.com` (or any) mailbox that receives CVs:
 ### 8. Optional extras
 
 - **Interview feedback form**: run `createFeedbackForm` once from the editor.
+- **Faster first screen (keep-warm)**: with `Speed.gs` added, run `installKeepWarm` once from the editor. A 5-minute timer keeps the app awake so the first screen after a quiet spell opens faster. It uses roughly 5–10 minutes a day of Google's 90-minute trigger allowance; run `removeKeepWarm` to turn it off.
 - **Notifications**: in-app **🏢 Company** settings — add an alerts email and/or a Google Chat webhook URL.
 - **Analytics dashboard**: in **📈 Analytics**, click *Build / refresh dashboard data*, then connect Looker Studio to the generated tab.
 

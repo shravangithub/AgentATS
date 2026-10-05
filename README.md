@@ -84,7 +84,7 @@ Honest benchmarking against the tools this replaces for small and mid-size teams
 - **The first load after a quiet period is slower** (a few seconds more) while Google starts the app back up — a "cold start".
 - **AI actions add a few seconds** (parsing, scoring, ranking, briefs) because they call Gemini.
 - **Saves run one at a time** so teammates can't overwrite each other, so busy moments can queue briefly.
-- **Revisits feel instant:** screens you've already opened load from a cached copy and refresh in the background. Very large trackers get slower; the built-in archiver keeps active data small and screens fast.
+- **What makes it feel instant anyway:** the app remembers each screen in your browser for up to 24 hours, so reopening it paints straight away and refreshes a second later; it loads the other main tabs in the background, so clicking them is instant; startup is a single server call; and an optional keep-warm timer (`installKeepWarm` in `Speed.gs`) cuts cold starts. Very large trackers still get slower; the built-in archiver keeps active data small.
 - This is the trade-off for running free inside your own Google account — no servers, no bill.
 
 *AI (bring your own Gemini key)*
@@ -96,6 +96,7 @@ Honest benchmarking against the tools this replaces for small and mid-size teams
 *Security & compliance*
 - **Not SOC 2 / ISO 27001 certified**, not third-party pen-tested — **not enterprise-compliance-ready out of the box** (regulated buyers like BFSI will need more).
 - Your data lives in **your own Google account** — security depends on your account hygiene (2FA, careful sharing). Access control and audit are app-level: solid, but not infrastructure-grade.
+- For speed, each person's browser keeps a copy of the screens they've opened for **up to 24 hours** (separate per access link). On a shared computer, use a private window.
 - **Data residency = Google's** (region tied to your account); GDPR / India DPDP obligations for candidate PII are the operator's responsibility.
 
 *Product scope*
@@ -135,7 +136,7 @@ Screenshots from the [live demo](https://shravangithub.github.io/AgentATS/demo/)
 AgentATS is fully self-provisioning — you never touch a Sheet ID or folder ID:
 
 1. Go to [script.google.com](https://script.google.com) → **New project**.
-2. Paste in the six files from this repo (`Code.gs`, `TalentRubric.gs`, `Index.html`, `Apply.html`, `Source.html`, and optionally `CvForwarder.gs` for the careers mailbox).
+2. Paste in the files from this repo (`Code.gs`, `TalentRubric.gs`, `Speed.gs`, `Index.html`, `Apply.html`, `Source.html`, and optionally `CvForwarder.gs` for the careers mailbox).
 3. In **Project Settings → Script Properties**, add one property: `GEMINI_KEY` = your Google AI Studio API key (free to create at [aistudio.google.com](https://aistudio.google.com)).
 4. In the editor, select **`firstRun`** and click **Run** (authorize when asked). It creates your tracker spreadsheet and CV folder, builds every tab, makes you the Admin, and logs your new Sheet's URL.
 5. **Deploy → New deployment → Web app** — Execute as: *Me*, Who has access: *Anyone*. Copy the URL.
