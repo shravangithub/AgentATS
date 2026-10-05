@@ -526,6 +526,7 @@
     listCandidates: function () { return CANDS.map(function (c) { return { id: c.candId, label: c.name + ' (' + c.candId + ')' }; }); },
     getReqBoard: function (scope) { return board(scope); },
     getToday: function (scope) { return getToday(scope); },
+    bootstrap: function (scope) { return { org: clone(ORG), settings: { biasMask: STATE.bias }, me: null, today: getToday(scope), board: board(scope) }; },
     getPipeline: function () { var st = {}; CANDS.forEach(function (c) { st[c.stage] = (st[c.stage] || 0) + 1; }); return { total: CANDS.length, stages: st, openReqs: REQS.filter(function (r) { return r.status === 'Open'; }).length }; },
     getPipelineView: function (id) { return { summary: reqSummary(id), plan: STATE.plans[id] || '', calibration: CAL[id] || null, workflow: workflow(id), pipeline: getReqPipeline(id), rankTs: RANK_TS[id] || null }; },
     getReqPipeline: function (id) { return getReqPipeline(id); },
